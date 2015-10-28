@@ -40,9 +40,10 @@ py_an_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static int 
 py_an_init(py_annul *self, PyObject *args, PyObject *kwds) {
-  if (!PyArg_ParseTuple(args, "i", &self->f))
+  char *filename;
+  if (!PyArg_ParseTuple(args, "si", &self->f))
     return -1;
-  self->ptr = new AnnulIndex(self->f);
+  self->ptr = new AnnulIndex(filename, self->f);
   return 0;
 }
 
@@ -64,34 +65,12 @@ static PyMemberDef py_annul_members[] = {
 
 
 static PyObject *
-py_an_load(py_annul *self, PyObject *args) {
-  char* filename;
-  bool res = false;
-  if (!self->ptr) 
-    return Py_None;
-  if (!PyArg_ParseTuple(args, "s", &filename))
-    return Py_None;
-
-  res = self->ptr->load(filename);
-
-  if (!res) {
-    PyErr_SetFromErrno(PyExc_IOError);
-    return NULL;
-  }
-  Py_RETURN_TRUE;
-}
-
-
-static PyObject *
 py_an_save(py_annul *self, PyObject *args) {
-  char *filename;
   bool res = false;
   if (!self->ptr) 
     return Py_None;
-  if (!PyArg_ParseTuple(args, "s", &filename))
-    return Py_None;
 
-  res = self->ptr->save(filename);
+  res = self->ptr->save();
 
   if (!res) {
     PyErr_SetFromErrno(PyExc_IOError);
@@ -214,17 +193,6 @@ py_an_build(py_annul *self, PyObject *args) {
 
 
 static PyObject *
-py_an_unload(py_annul *self, PyObject *args) {
-  if (!self->ptr) 
-    return Py_None;
-
-  self->ptr->unload();
-
-  Py_RETURN_TRUE;
-}
-
-
-static PyObject *
 py_an_get_distance(py_annul *self, PyObject *args) {
   int32_t i,j;
   double d=0;
@@ -269,14 +237,12 @@ py_an_verbose(py_annul *self, PyObject *args) {
 
 
 static PyMethodDef AnnulMethods[] = {
-  {"load",	(PyCFunction)py_an_load, METH_VARARGS, ""},
   {"save",	(PyCFunction)py_an_save, METH_VARARGS, ""},
   {"get_nns_by_item",(PyCFunction)py_an_get_nns_by_item, METH_VARARGS, ""},
   {"get_nns_by_vector",(PyCFunction)py_an_get_nns_by_vector, METH_VARARGS, ""},
   {"get_item_vector",(PyCFunction)py_an_get_item_vector, METH_VARARGS, ""},
   {"add_item",(PyCFunction)py_an_add_item, METH_VARARGS, ""},
   {"build",(PyCFunction)py_an_build, METH_VARARGS, ""},
-  {"unload",(PyCFunction)py_an_unload, METH_VARARGS, ""},
   {"get_distance",(PyCFunction)py_an_get_distance, METH_VARARGS, ""},
   {"get_n_items",(PyCFunction)py_an_get_n_items, METH_VARARGS, ""},
   {"verbose",(PyCFunction)py_an_verbose, METH_VARARGS, ""},

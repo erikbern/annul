@@ -48,16 +48,22 @@ typedef int S;
 
 class AnnulIndex {
  private:
+  S _f;
   Kiss64Random _random;
+  MDB_env *_env;
+
  public:
-  AnnulIndex(int f) {};
-  ~AnnulIndex() {};
+  AnnulIndex(const char* filename, S f) {
+    _f = f;
+    int rc = mdb_env_create(&_env);
+  }
+  ~AnnulIndex() {
+    mdb_env_close(_env);
+  };
   void add_item(S item, const T* w) {};
   void build(int q) {};
-  bool save(const char* filename) {};
+  bool save() {};
   void reinitialize() {};
-  void unload() {};
-  bool load(const char* filename) {};
   T get_distance(S i, S j) {};
   void get_nns_by_item(S item, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) {};
   void get_nns_by_vector(const T* w, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) {};
