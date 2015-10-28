@@ -1,10 +1,8 @@
 #include "annullib.h"
-#include "kissrandom.h"
 #include "Python.h"
 #include "structmember.h"
 #include <exception>
 #include <stdint.h>
-#include "lmdb/libraries/liblmdb/lmdb.h"
 
 #if PY_MAJOR_VERSION >= 3
 #define IS_PY3K
@@ -18,14 +16,11 @@
     #define PyInt_FromLong PyLong_FromLong 
 #endif
 
-
-template class AnnulIndexInterface<int32_t, float>;
-
 // annul python object
 typedef struct {
   PyObject_HEAD
   int f;
-  AnnulIndexInterface<int32_t, float>* ptr;
+  AnnulIndex* ptr;
 } py_annul;
 
 
@@ -45,18 +40,9 @@ py_an_new(PyTypeObject *type, PyObject *args, PyObject *kwds) {
 
 static int 
 py_an_init(py_annul *self, PyObject *args, PyObject *kwds) {
-  const char *metric;
-
-  if (!PyArg_ParseTuple(args, "is", &self->f, &metric))
+  if (!PyArg_ParseTuple(args, "i", &self->f))
     return -1;
-  switch(metric[0]) {
-  case 'a':
-    self->ptr = new AnnulIndex<int32_t, float, Kiss64Random>(self->f);
-    break;
-  case 'e':
-    self->ptr = new AnnulIndex<int32_t, float, Kiss64Random>(self->f);
-    break;
-  }
+  self->ptr = new AnnulIndex(self->f);
   return 0;
 }
 

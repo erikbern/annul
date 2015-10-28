@@ -40,43 +40,30 @@
 #include <queue>
 #include <limits>
 
-template<typename S, typename T>
-class AnnulIndexInterface {
- public:
-  virtual ~AnnulIndexInterface() {};
-  virtual void add_item(S item, const T* w) = 0;
-  virtual void build(int q) = 0;
-  virtual bool save(const char* filename) = 0;
-  virtual void reinitialize() = 0;
-  virtual void unload() = 0;
-  virtual bool load(const char* filename) = 0;
-  virtual T get_distance(S i, S j) = 0;
-  virtual void get_nns_by_item(S item, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) = 0;
-  virtual void get_nns_by_vector(const T* w, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) = 0;
-  virtual S get_n_items() = 0;
-  virtual void verbose(bool v) = 0;
-  virtual void get_item(S item, std::vector<T>* v) = 0;
-};
+#include "kissrandom.h"
+#include "lmdb/libraries/liblmdb/lmdb.h"
 
-template<typename S, typename T, class Random>
-  class AnnulIndex : public AnnulIndexInterface<S, T> {
+typedef float T;
+typedef int S;
+
+class AnnulIndex {
  private:
-  Random _random;
+  Kiss64Random _random;
  public:
-  AnnulIndex(int f) : _random() {}
-  ~AnnulIndex() {}
-  void add_item(S item, const T* w) {}
-  void build(int q) {}
-  bool save(const char* filename) {}
-  void reinitialize() {}
-  void unload() {}
-  bool load(const char* filename) {}
-  T get_distance(S i, S j) {}
-  void get_nns_by_item(S item, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) {}
-  void get_nns_by_vector(const T* w, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) {}
-  S get_n_items() {}
-  void verbose(bool v) {}
-  void get_item(S item, std::vector<T>* v) {}
+  AnnulIndex(int f) {};
+  ~AnnulIndex() {};
+  void add_item(S item, const T* w) {};
+  void build(int q) {};
+  bool save(const char* filename) {};
+  void reinitialize() {};
+  void unload() {};
+  bool load(const char* filename) {};
+  T get_distance(S i, S j) {};
+  void get_nns_by_item(S item, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) {};
+  void get_nns_by_vector(const T* w, size_t n, size_t search_k, std::vector<S>* result, std::vector<T>* distances) {};
+  S get_n_items() {};
+  void verbose(bool v) {};
+  void get_item(S item, std::vector<T>* v) {};
 };
 
 #endif
