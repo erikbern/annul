@@ -1,0 +1,3 @@
+[submodule "src/lmdb"]
+	path = src/lmdb
+	url = https://github.com/LMDB/lmdb
