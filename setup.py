@@ -9,7 +9,7 @@ setup(name='annul',
       packages=['annul'],
       ext_modules=[
           Extension(
-              'annul.annullib', ['src/annulmodule.cc'],
+              'annul.annullib', ['src/annulmodule.cc', 'src/lmdb/libraries/liblmdb/mdb.c'],
               depends=['src/annullib.h'],
               extra_compile_args=['-O3', '-march=native', '-ffast-math'],
           )

@@ -4,7 +4,7 @@
 #include "structmember.h"
 #include <exception>
 #include <stdint.h>
-
+#include "lmdb/libraries/liblmdb/lmdb.h"
 
 #if PY_MAJOR_VERSION >= 3
 #define IS_PY3K
